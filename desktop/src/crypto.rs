@@ -142,6 +142,17 @@ impl NonMessengerCrypto {
 
     /// Encrypt message using hybrid RSA + AES-256-GCM encryption
     pub fn encrypt_message(&mut self, message: &str, public_key_pem: &str) -> Result<EncryptedMessage> {
+        // CONTENT POLICY: Limit message size to 2048 bytes (2KB) for text-only communication
+        // This prevents file sharing, image distribution, and other binary content
+        let message_bytes = message.as_bytes();
+        if message_bytes.len() > 2048 {
+            return Err(anyhow!(
+                "Message too large: {} bytes. Maximum allowed: 2048 bytes (2KB). \
+                NonMessenger is designed for secure text communication only.",
+                message_bytes.len()
+            ));
+        }
+
         // Generate random AES key and nonce
         let mut aes_key = [0u8; AES_KEY_SIZE];
         let mut nonce_bytes = [0u8; 12]; // GCM standard nonce size

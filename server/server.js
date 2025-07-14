@@ -148,6 +148,24 @@ class NonMessengerServer {
                 return res.status(400).json({ error: 'Missing required fields' });
             }
 
+            // CONTENT POLICY: Enforce 2KB message size limit for text-only communication
+            const messageSize = JSON.stringify(req.body).length;
+            if (messageSize > 4096) { // Allow some overhead for encryption, but keep total under 4KB
+                return res.status(413).json({
+                    error: `Message payload too large: ${messageSize} bytes. NonMessenger is designed for text-only communication. Maximum total message size: 4KB.`,
+                    maxSize: 4096,
+                    currentSize: messageSize
+                });
+            }
+
+            // Additional validation for encrypted message content
+            if (encryptedMessage && JSON.stringify(encryptedMessage).length > 3072) {
+                return res.status(413).json({
+                    error: 'Encrypted message content exceeds size limits for text communication.',
+                    maxEncryptedSize: 3072
+                });
+            }
+
             const message = {
                 id: messageId,
                 recipientContactCode,

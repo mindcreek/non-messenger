@@ -102,14 +102,23 @@ describe('NonMessengerCrypto', () => {
             expect(encrypted1.iv).not.toBe(encrypted2.iv);
         });
 
-        test('should handle large messages', () => {
+        test('should reject messages larger than 2KB', () => {
             const keyPair = crypto.generateRSAKeyPair();
-            const largeMessage = 'A'.repeat(10000);
-            
-            const encrypted = crypto.encryptMessage(largeMessage, keyPair.publicKey);
+            const largeMessage = 'A'.repeat(2049); // 2049 bytes - exceeds 2KB limit
+
+            expect(() => {
+                crypto.encryptMessage(largeMessage, keyPair.publicKey);
+            }).toThrow('Message too large: 2049 bytes. Maximum allowed: 2048 bytes (2KB)');
+        });
+
+        test('should handle maximum allowed message size', () => {
+            const keyPair = crypto.generateRSAKeyPair();
+            const maxMessage = 'A'.repeat(2048); // Exactly 2KB
+
+            const encrypted = crypto.encryptMessage(maxMessage, keyPair.publicKey);
             const decrypted = crypto.decryptMessage(encrypted, keyPair.privateKey);
-            
-            expect(decrypted).toBe(largeMessage);
+
+            expect(decrypted).toBe(maxMessage);
         });
 
         test('should fail with wrong private key', () => {

@@ -38,6 +38,13 @@
 - **Metadata protection** - Server never sees private keys
 - **Open source** - Complete transparency and auditability
 
+### 📝 **Responsible Content Policy**
+- **Text-only communication** - 2048 bytes (2KB) maximum message size
+- **Voice calls only** - No file sharing or media distribution
+- **Legal compliance** - Prevents misuse while protecting privacy
+- **Technical enforcement** - Size limits prevent illegal content sharing
+- **No content inspection** - Privacy maintained through technical design
+
 ## ⚖️ **IMPORTANT LEGAL NOTICE**
 
 **The developer is NOT a United States citizen and is NOT subject to US laws regarding cryptographic software development.**
@@ -137,6 +144,7 @@ cd android && ./gradlew assembleDebug
 ## 📖 Documentation
 
 - [**Legal Notice**](LEGAL_NOTICE.md) - Important legal declarations
+- [**Content Policy**](CONTENT_POLICY.md) - Responsible use and size limitations
 - [**Cryptographic Implementation**](CRYPTO_IMPLEMENTATION.md) - Complete crypto documentation
 - [**Deployment Guide**](DEPLOYMENT_GUIDE.md) - Production deployment instructions
 - [**Cryptographic Warfare Manual**](CRYPTOGRAPHIC_WARFARE_MANUAL.md) - Advanced security guide

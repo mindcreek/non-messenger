@@ -114,21 +114,31 @@ class NonMessengerCrypto {
     }
 
     fun encryptMessage(message: String, publicKeyString: String): EncryptedMessage {
+        // CONTENT POLICY: Limit message size to 2048 bytes (2KB) for text-only communication
+        // This prevents file sharing, image distribution, and other binary content
+        val messageBytes = message.toByteArray(StandardCharsets.UTF_8)
+        if (messageBytes.size > 2048) {
+            throw IllegalArgumentException(
+                "Message too large: ${messageBytes.size} bytes. Maximum allowed: 2048 bytes (2KB). " +
+                "NonMessenger is designed for secure text communication only."
+            )
+        }
+
         // Generate AES key
         val keyGenerator = KeyGenerator.getInstance("AES")
         keyGenerator.init(AES_KEY_SIZE)
         val aesKey = keyGenerator.generateKey()
-        
+
         // Generate IV
         val iv = ByteArray(GCM_IV_LENGTH)
         secureRandom.nextBytes(iv)
-        
+
         // Encrypt message with AES-GCM
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         val gcmSpec = GCMParameterSpec(GCM_TAG_LENGTH * 8, iv)
         cipher.init(Cipher.ENCRYPT_MODE, aesKey, gcmSpec)
-        
-        val encryptedBytes = cipher.doFinal(message.toByteArray(StandardCharsets.UTF_8))
+
+        val encryptedBytes = cipher.doFinal(messageBytes)
         val encryptedMessage = encryptedBytes.dropLast(GCM_TAG_LENGTH).toByteArray()
         val authTag = encryptedBytes.takeLast(GCM_TAG_LENGTH).toByteArray()
         

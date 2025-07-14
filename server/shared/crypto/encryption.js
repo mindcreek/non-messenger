@@ -82,6 +82,13 @@ class NonMessengerCrypto {
     }
 
     encryptMessage(message, publicKey) {
+        // CONTENT POLICY: Limit message size to 2048 bytes (2KB) for text-only communication
+        // This prevents file sharing, image distribution, and other binary content
+        const messageBytes = Buffer.byteLength(message, 'utf8');
+        if (messageBytes > 2048) {
+            throw new Error(`Message too large: ${messageBytes} bytes. Maximum allowed: 2048 bytes (2KB). NonMessenger is designed for secure text communication only.`);
+        }
+
         const aesKey = crypto.randomBytes(32);
         const iv = crypto.randomBytes(16); // Use 16-byte IV for CBC
 

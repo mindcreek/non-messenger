@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.nonmessenger.crypto.NonMessengerCrypto
 import com.nonmessenger.database.NonMessengerDatabase
-import com.nonmessenger.model.*
+import com.nonmessenger.models.*
 import com.nonmessenger.network.MessagePoolClient
 import com.nonmessenger.repository.ContactRepository
 import com.nonmessenger.repository.MessageRepository
